@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Stackly · 404 on signin/forgot · nise design</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ===== base & nise palette ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #f4f2ef;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    :root {
+      --primary-slate: #2c4a52;
+      --secondary-sage: #6b8f7a;
+      --tertiary-clay: #b67c6b;
+      --neutral-stone: #d9d0c5;
+      --light-sand: #f0ebe5;
+      --paper-cream: #faf7f2;
+      --charcoal-soft: #3a4a47;
+      --graphite: #2d3a37;
+      --anime-dust: #d1b99b;
+      --mist-blue: #b3c9c9;
+      --soft-shadow: 0 15px 30px -12px rgba(44, 74, 82, 0.15);
+      --transition-smooth: all 0.25s ease;
+      --error-rose: #d88c8c;
+      --success-moss: #5f8575;
+    }
+
+    .auth-card {
+      max-width: 1000px;
+      width: 100%;
+      background: var(--paper-cream);
+      border-radius: 60px;
+      box-shadow: var(--soft-shadow), 0 20px 35px -8px rgba(44,74,82,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+      border: 2px solid var(--neutral-stone);
+    }
+
+    /* LEFT BRAND PANEL */
+    .brand-panel {
+      flex: 1 1 380px;
+      background: linear-gradient(145deg, var(--primary-slate) 0%, #385b5f 45%, var(--secondary-sage) 100%);
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      isolation: isolate;
+    }
+    .brand-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" opacity="0.1"><path fill="%23d1b99b" d="M40,80 L80,40 L120,60 L160,100 L130,150 L90,130 L50,140 L30,100 Z"/><circle cx="170" cy="40" r="18" fill="%23b67c6b" opacity="0.5"/><rect x="20" y="160" width="35" height="25" fill="%23d9d0c5" opacity="0.3"/></svg>');
+      background-size: 220px 220px;
+      background-repeat: repeat;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .brand-content {
+      position: relative;
+      z-index: 5;
+      color: white;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 2.5rem;
+    }
+    .brand-logo i {
+      color: var(--anime-dust);
+      transform: rotate(-5deg);
+      font-size: 2.3rem;
+    }
+    .brand-panel h2 {
+      font-size: clamp(2rem, 5vw, 2.6rem);
+      font-weight: 600;
+      line-height: 1.2;
+      max-width: 300px;
+    }
+    .brand-panel h2 span {
+      color: var(--anime-dust);
+      border-bottom: 3px dotted var(--tertiary-clay);
+    }
+    .brand-features {
+      margin: 2.5rem 0 2rem;
+      list-style: none;
+    }
+    .brand-features li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      font-weight: 400;
+      font-size: 1.1rem;
+    }
+    .brand-features i {
+      color: var(--anime-dust);
+      font-size: 1.4rem;
+      width: 28px;
+      text-align: center;
+    }
+    .brand-quote {
+      font-style: italic;
+      opacity: 0.9;
+      border-left: 4px solid var(--tertiary-clay);
+      padding-left: 1.2rem;
+      margin-top: 2rem;
+    }
+    .brand-footer {
+      position: relative;
+      z-index: 5;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .brand-footer a {
+      color: white;
+      text-decoration: none;
+      border-bottom: 1px dotted transparent;
+      transition: 0.2s;
+    }
+    .brand-footer a:hover {
+      border-bottom-color: var(--anime-dust);
+    }
+
+    /* RIGHT FORM PANEL */
+    .form-panel {
+      flex: 1 1 420px;
+      background: var(--paper-cream);
+      padding: 2.8rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-header {
+      margin-bottom: 2rem;
+    }
+    .form-header h3 {
+      font-size: 2rem;
+      color: var(--primary-slate);
+      font-weight: 600;
+    }
+    .form-header p {
+      color: var(--charcoal-soft);
+      margin-top: 0.4rem;
+    }
+
+    .auth-toggle {
+      display: flex;
+      gap: 1rem;
+      margin: 1.8rem 0 2rem;
+      background: var(--neutral-stone);
+      padding: 0.4rem;
+      border-radius: 60px;
+      max-width: 300px;
+    }
+    .toggle-btn {
+      flex: 1;
+      text-align: center;
+      padding: 0.7rem 0.8rem;
+      border: none;
+      background: transparent;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--primary-slate);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .toggle-btn.active {
+      background: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      color: var(--tertiary-clay);
+    }
+
+    .forms-container {
+      width: 100%;
+    }
+    .auth-form {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .auth-form.active-form {
+      display: block;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0.5; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .input-group i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--secondary-sage);
+      font-size: 1.1rem;
+      width: 22px;
+      text-align: center;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3rem;
+      border: 2px solid var(--neutral-stone);
+      border-radius: 60px;
+      font-size: 1rem;
+      background: white;
+      transition: 0.2s;
+      outline: none;
+      color: var(--primary-slate);
+    }
+    .input-group input:focus {
+      border-color: var(--tertiary-clay);
+      box-shadow: 0 0 0 4px rgba(182, 124, 107, 0.15);
+    }
+
+    /* password strength bar & alert */
+    .password-strength {
+      margin: -0.8rem 0 1.2rem 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .strength-bar {
+      height: 6px;
+      width: 120px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      background: transparent;
+      transition: width 0.3s, background 0.3s;
+    }
+    .strength-text {
+      color: var(--charcoal-soft);
+    }
+
+    .alert-message {
+      background: #fee9e7;
+      border-left: 6px solid var(--error-rose);
+      color: #a15353;
+      padding: 0.9rem 1.2rem;
+      border-radius: 50px;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .alert-message i {
+      font-size: 1.3rem;
+      color: var(--error-rose);
+    }
+    .alert-message.hidden {
+      display: none;
+    }
+
+    .form-options {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1.2rem 0 2rem;
+    }
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--charcoal-soft);
+      font-size: 0.95rem;
+    }
+    .remember input[type="checkbox"] {
+      accent-color: var(--tertiary-clay);
+    }
+    .forgot-link {
+      color: var(--tertiary-clay);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-auth {
+      width: 100%;
+      padding: 1rem;
+      background: var(--tertiary-clay);
+      border: none;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 8px 18px -6px var(--tertiary-clay);
+    }
+    .btn-auth:hover:not(:disabled) {
+      background: #9f6b5a;
+      transform: scale(1.02);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0 1.8rem;
+      color: var(--charcoal-soft);
+    }
+    .divider-line {
+      height: 2px;
+      background: var(--neutral-stone);
+      flex: 1;
+    }
+
+    .social-auth {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .social-btn {
+      flex: 1 1 120px;
+      background: white;
+      border: 2px solid var(--neutral-stone);
+      border-radius: 60px;
+      padding: 0.7rem 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: var(--primary-slate);
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .social-btn i {
+      color: var(--tertiary-clay);
+    }
+    .social-btn:hover {
+      background: var(--light-sand);
+      border-color: var(--tertiary-clay);
+    }
+
+    .switch-mobile {
+      display: none;
+      text-align: center;
+      margin-top: 1.8rem;
+      font-weight: 500;
+    }
+    .switch-mobile a {
+      color: var(--tertiary-clay);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    /* 404 page */
+    .page-404 {
+      display: none;
+      text-align: center;
+      padding: 3rem;
+      background: var(--paper-cream);
+      border-radius: 80px;
+      max-width: 600px;
+      margin: 2rem auto;
+      box-shadow: var(--soft-shadow);
+      border: 2px solid var(--neutral-stone);
+    }
+    .page-404 h1 {
+      font-size: 6rem;
+      color: var(--primary-slate);
+    }
+    .page-404 h2 {
+      font-size: 2.5rem;
+      color: var(--tertiary-clay);
+      margin-bottom: 1rem;
+    }
+    .page-404 p {
+      color: var(--charcoal-soft);
+      margin-bottom: 2rem;
+    }
+    .btn-primary {
+      background: var(--tertiary-clay);
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 60px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1.1rem;
+      box-shadow: 0 8px 18px -6px var(--tertiary-clay);
+    }
+    .btn-primary:hover {
+      background: #9f6b5a;
+    }
+
+    /* responsive */
+    @media screen and (max-width: 768px) {
+      .auth-toggle { display: none; }
+      .switch-mobile { display: block; }
+      .brand-panel { flex-basis: 100%; }
+      .form-panel { flex-basis: 100%; }
+      .auth-card { border-radius: 40px; }
+    }
+    @media screen and (max-width: 480px) {
+      .form-panel { padding: 1.8rem 1.2rem; }
+      .social-auth { flex-direction: column; }
+      .social-btn { flex: auto; }
+    }
+  </style>
+</head>
+<body>
+  <!-- MAIN AUTH CARD -->
+  <div id="authContainer" class="auth-card">
+    <!-- LEFT BRAND PANEL -->
+    <div class="brand-panel">
+      <div class="brand-content">
+        <div class="brand-logo">
+          <i class="fas fa-tree"></i> <span>Stackly</span>
+        </div>
+        <h2>design <span>your space</span> with nise soul</h2>
+        <ul class="brand-features">
+          <li><i class="fas fa-check-circle"></i> 200+ homes · 4.9 rating</li>
+          <li><i class="fas fa-leaf"></i> Eco‑conscious & warm minimalism</li>
+          <li><i class="fas fa-palette"></i> nise color palette · anime touch</li>
+          <li><i class="fas fa-hand-holding-heart"></i> 1.2k happy clients</li>
+        </ul>
+        <div class="brand-quote">
+          “Find your dream place with honest, beautiful design.”
+        </div>
+      </div>
+      <div class="brand-footer">
+        <a href="#">About</a><a href="#">Privacy</a><a href="#">Contact</a><a href="#">Terms</a>
+      </div>
+    </div>
+
+    <!-- RIGHT FORM PANEL -->
+    <div class="form-panel">
+      <div class="form-header">
+        <h3 id="formTitle">Welcome back</h3>
+        <p id="formSubtitle">Sign in to continue your journey</p>
+      </div>
+
+      <!-- toggle desktop -->
+      <div class="auth-toggle" id="toggleDesktop">
+        <button class="toggle-btn active" id="showLoginBtn">Sign In</button>
+        <button class="toggle-btn" id="showRegisterBtn">Register</button>
+      </div>
+
+      <!-- GLOBAL ALERT (hidden, barely used but kept for structure) -->
+      <div id="globalAlert" class="alert-message hidden">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="alertText">Invalid credentials</span>
+      </div>
+
+      <!-- forms container -->
+      <div class="forms-container">
+        <!-- LOGIN FORM (autocomplete=off) -->
+        <form id="loginForm" class="auth-form active-form" novalidate autocomplete="off">
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="loginEmail" placeholder="Email address" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="loginPassword" placeholder="Password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+          </div>
+          <div class="form-options">
+            <label class="remember"><input type="checkbox"> Remember me</label>
+            <a href="#" class="forgot-link" id="forgotLink"><i class="fas fa-question-circle"></i> Forgot?</a>
+          </div>
+          <!-- SIGN IN BUTTON: goes to 404 immediately -->
+          <button type="submit" class="btn-auth" id="loginButton"><i class="fas fa-arrow-right-to-bracket"></i> Sign In</button>
+        </form>
+
+        <!-- REGISTER FORM (autocomplete=off) -->
+        <form id="registerForm" class="auth-form" novalidate autocomplete="off">
+          <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="regName" placeholder="Full name" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+          </div>
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="regEmail" placeholder="Email address" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="regPassword" placeholder="Password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+          </div>
+          <!-- password strength indicator -->
+          <div class="password-strength">
+            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+            <span class="strength-text" id="strengthLabel">enter password</span>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="regConfirm" placeholder="Confirm password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+          </div>
+          <div class="form-options">
+            <label class="remember"><input type="checkbox"> I agree to Terms</label>
+          </div>
+          <button type="submit" class="btn-auth" id="registerButton"><i class="fas fa-user-plus"></i> Create account</button>
+        </form>
+      </div>
+
+      <!-- divider & social (all go to 404) -->
+      <div class="divider"><span class="divider-line"></span><span>or continue with</span><span class="divider-line"></span></div>
+      <div class="social-auth">
+        <div class="social-btn" id="googleBtn"><i class="fab fa-google"></i> Google</div>
+        <div class="social-btn" id="appleBtn"><i class="fab fa-apple"></i> Apple</div>
+        <div class="social-btn" id="facebookBtn"><i class="fab fa-facebook-f"></i> Facebook</div>
+      </div>
+
+      <!-- mobile switch -->
+      <div class="switch-mobile">
+        <span id="mobileSwitchText">Don't have an account?</span>
+        <a href="#" id="mobileSwitchLink">Sign up</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 404 PAGE (hidden) -->
+  <div id="page404" class="page-404">
+    <h1>404</h1>
+    <h2>page not found</h2>
+    <p>Looks like you wandered off the map. But don't worry, our design journey continues.</p>
+    <button id="backHomeBtn" class="btn-primary"><i class="fas fa-home"></i> Back to Auth</button>
+  </div>
+
+  <script>
+    (function() {
+      // DOM elements
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const showLoginBtn = document.getElementById('showLoginBtn');
+      const showRegisterBtn = document.getElementById('showRegisterBtn');
+      const formTitle = document.getElementById('formTitle');
+      const formSubtitle = document.getElementById('formSubtitle');
+      const mobileSwitchLink = document.getElementById('mobileSwitchLink');
+      const mobileSwitchText = document.getElementById('mobileSwitchText');
+
+      // Password strength elements
+      const regPassword = document.getElementById('regPassword');
+      const strengthFill = document.getElementById('strengthFill');
+      const strengthLabel = document.getElementById('strengthLabel');
+
+      // 404 elements
+      const authContainer = document.getElementById('authContainer');
+      const page404 = document.getElementById('page404');
+      const backHomeBtn = document.getElementById('backHomeBtn');
+
+      // Social & forgot
+      const googleBtn = document.getElementById('googleBtn');
+      const appleBtn = document.getElementById('appleBtn');
+      const facebookBtn = document.getElementById('facebookBtn');
+      const forgotLink = document.getElementById('forgotLink');
+      
+      // Sign in button (direct 404)
+      const loginButton = document.getElementById('loginButton');
+
+      // Disable autofill on all inputs
+      document.querySelectorAll('input').forEach(input => {
+        input.setAttribute('autocomplete', 'off');
+        input.setAttribute('autocorrect', 'off');
+        input.setAttribute('spellcheck', 'false');
+      });
+
+      // --- Password strength meter (register) ---
+      function evaluateStrength(pw) {
+        if (!pw) return { score: 0, label: 'enter password', color: 'transparent' };
+        let score = 0;
+        if (pw.length >= 8) score++;
+        if (pw.length >= 12) score++;
+        if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
+        if (/[0-9]/.test(pw)) score++;
+        if (/[^a-zA-Z0-9]/.test(pw)) score++;
+        score = Math.min(4, score);
+        const labels = ['too weak', 'weak', 'fair', 'good', 'strong'];
+        const colors = ['#d88c8c', '#d88c8c', '#e6b87a', '#8fbc8f', '#5f8575'];
+        return { score, label: labels[score], color: colors[score] };
+      }
+
+      if (regPassword) {
+        regPassword.addEventListener('input', function() {
+          const pw = this.value;
+          const strength = evaluateStrength(pw);
+          strengthFill.style.width = (strength.score * 25) + '%';
+          strengthFill.style.background = strength.color;
+          strengthLabel.innerText = strength.label;
+        });
+      }
+
+      // --- Helper to show 404 ---
+      function show404() {
+        authContainer.style.display = 'none';
+        page404.style.display = 'block';
+      }
+
+      // --- SIGN IN BUTTON: direct 404 (no validation) ---
+      if (loginButton) {
+        loginButton.addEventListener('click', function(e) {
+          e.preventDefault();      // prevent form submit
+          show404();
+        });
+      }
+
+      // --- FORGOT LINK: direct 404 ---
+      if (forgotLink) {
+        forgotLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          show404();
+        });
+      }
+
+      // --- Social login: Google, Apple, Facebook all go to 404 ---
+      if (googleBtn) googleBtn.addEventListener('click', show404);
+      if (appleBtn) appleBtn.addEventListener('click', show404);
+      if (facebookBtn) facebookBtn.addEventListener('click', show404);
+
+      // --- Toggle between login/register forms (no effect on 404) ---
+      function setActiveForm(formType) {
+        if (formType === 'login') {
+          loginForm.classList.add('active-form');
+          registerForm.classList.remove('active-form');
+          showLoginBtn.classList.add('active');
+          showRegisterBtn.classList.remove('active');
+          formTitle.innerText = 'Welcome back';
+          formSubtitle.innerText = 'Sign in to continue your journey';
+          mobileSwitchText.innerText = "Don't have an account?";
+          mobileSwitchLink.innerText = 'Sign up';
+        } else {
+          registerForm.classList.add('active-form');
+          loginForm.classList.remove('active-form');
+          showRegisterBtn.classList.add('active');
+          showLoginBtn.classList.remove('active');
+          formTitle.innerText = 'Join Stackly';
+          formSubtitle.innerText = 'Create your free account';
+          mobileSwitchText.innerText = 'Already have an account?';
+          mobileSwitchLink.innerText = 'Sign in';
+        }
+      }
+
+      if (showLoginBtn && showRegisterBtn) {
+        showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); setActiveForm('login'); });
+        showRegisterBtn.addEventListener('click', (e) => { e.preventDefault(); setActiveForm('register'); });
+      }
+
+      // Mobile switch link
+      if (mobileSwitchLink) {
+        mobileSwitchLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          const isLogin = loginForm.classList.contains('active-form');
+          setActiveForm(isLogin ? 'register' : 'login');
+        });
+      }
+
+      // Back from 404 to auth
+      if (backHomeBtn) {
+        backHomeBtn.addEventListener('click', () => {
+          page404.style.display = 'none';
+          authContainer.style.display = 'flex';
+        });
+      }
+
+      // Register form submit just shows a message and stays (no 404)
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Registration demo: you can now sign in (click Sign In to go to 404).');
+        // you could optionally switch to login tab
+        setActiveForm('login');
+      });
+
+      // Ensure auth container visible, 404 hidden
+      authContainer.style.display = 'flex';
+      page404.style.display = 'none';
+    })();
+  </script>
+</body>
+</html>
